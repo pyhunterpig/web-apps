@@ -459,7 +459,7 @@ define([
                         tip.dontShow = true;
                     (tip.tip()).remove();
                 }
-            }, this);
+            });
 
             $(this.el).html(this.template({
                 groups: this.groups ? this.groups.toJSON() : null,
@@ -477,10 +477,10 @@ define([
             _.each(this.dataViewItems, function(item) {
                 this.stopListening(item);
                 item.stopListening(item.model);
-            }, this);
+            }.bind(this));
             this.dataViewItems = [];
 
-            this.store.each(this.onAddItem, this);
+            this.store.each(this.onAddItem.bind(this));
 
             if (this.allowScrollbar) {
                 this.scroller = new Common.UI.Scroller({

@@ -175,7 +175,7 @@ define([
                 _btn.render( $('#'+item[2])) ;
                 _btn.on('click', _.bind(this.onBtnBordersClick, this));
                 this.lockedControls.push(_btn);
-            }, this);
+            }.bind(this));
 
             this.cmbBorderType = new Common.UI.ComboBorderType({
                 el: $('#cell-combo-border-type'),

@@ -149,7 +149,7 @@ define([
             opts.merge && (controls = _.union(this.lockControls,controls));
 
             function doLock(cmp, cause) {
-                if ( cmp && _.contains(cmp.options.lock, cause) ) {
+                if ( cmp && _.includes(cmp.options.lock, cause) ) {
                     var index = cmp.keepState.indexOf(cause);
                     if (lock) {
                         if (index < 0) {
@@ -1758,7 +1758,7 @@ define([
                         value   : index
                     });
                 }
-            }, this);
+            }.bind(this));
         },
 
         onApiCollaborativeChanges: function() {

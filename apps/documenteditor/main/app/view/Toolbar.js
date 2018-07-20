@@ -2049,11 +2049,11 @@ define([
                     }
 
                     if (index == 21) {
-                        this.mnuColorSchema.addItem({
+                        me.mnuColorSchema.addItem({
                             caption: '--'
                         });
                     } else {
-                        this.mnuColorSchema.addItem({
+                        me.mnuColorSchema.addItem({
                             template: itemTemplate,
                             cls: 'color-schemas-menu',
                             colors: schemecolors,
@@ -2061,7 +2061,7 @@ define([
                             value: index
                         });
                     }
-                }, this);
+                });
             },
 
             /** coauthoring begin **/

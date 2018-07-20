@@ -823,7 +823,7 @@ define([
                 opts.merge && (controls = _.union(this.lockControls, controls));
 
                 function doLock(cmp, cause) {
-                    if (_.contains(cmp.options.lock, cause)) {
+                    if (_.includes(cmp.options.lock, cause)) {
                         var index = cmp.keepState.indexOf(cause);
                         if (lock) {
                             if (index < 0) {

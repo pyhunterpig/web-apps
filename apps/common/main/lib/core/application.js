@@ -72,7 +72,7 @@
             
             _.each(this.allocationMap, function(name, key) {
                 this[name] = this[name] || {};
-            }, this);
+            }.bind(this));
         },
         
         /**
@@ -140,7 +140,7 @@
 
                 this.buildCollections();
                 this.controllers[ctrl] = controller;
-            }, this);
+            }.bind(this));
         },
 
         /**
@@ -149,7 +149,7 @@
         launchControllers: function() {
             _.each(this.controllers, function(ctrl, id) {
                 ctrl.onLaunch(this);
-            }, this);
+            }.bind(this));
         },
 
         /**
@@ -267,7 +267,7 @@
         buildCollections: function() {
             _.each(this.collections, function(collection, alias) {
                 this.getCollection(alias);
-            }, this);
+            }.bind(this));
         }
     });
 
@@ -513,7 +513,7 @@
             if(_.isArray(selectors)) {
                 _.each(selectors, function(selector) {
                     this.addListeners(selector, controller);
-                }, this)
+                }.bind(this))
             }
             else if(_.isObject(selectors)) {
                 _.each(selectors, function(listeners, selector) {
@@ -522,8 +522,8 @@
                         pool[selector][event] = pool[selector][event] || [];
                         pool[selector][event].push(listener);
 
-                    }, this);
-                }, this)
+                    }.bind(this));
+                }.bind(this))
 
             }
         },
@@ -547,7 +547,7 @@
                 }
 
 
-            }, this);
+            }.bind(this));
         },
 
         getApplication: function() {

@@ -90,7 +90,7 @@ define([
             isSuspendEvents: false,
 
             initialize : function(options) {
-                this.options = this.options ? _({}).extend(this.options, options) : options;
+                this.options = this.options ? _.extend({}, this.options, options) : options;
             },
 
             setVisible: function(visible) {

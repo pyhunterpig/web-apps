@@ -46,7 +46,7 @@ require.config({
     baseUrl: '../../',
     paths: {
         jquery          : '../vendor/jquery/jquery',
-        underscore      : '../vendor/underscore/underscore',
+        underscore      : '../vendor/lodash/lodash',
         xregexp         : '../vendor/xregexp/xregexp-all-min',
         sockjs          : '../vendor/sockjs/sockjs.min',
         allfonts        : '../../sdkjs/common/AllFonts'

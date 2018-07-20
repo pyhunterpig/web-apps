@@ -343,7 +343,7 @@ define([
                         checked     : this.langMenu.saved == item.title,
                         toggleGroup : 'language'
                     });
-                }, this);
+                }.bind(this));
 
                 this.langMenu.doLayout();
                 if (this.langMenu.items.length>0) {

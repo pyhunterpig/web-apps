@@ -46,7 +46,7 @@ require.config({
     baseUrl: '../../',
     paths: {
         jquery          : '../vendor/jquery/jquery',
-        underscore      : '../vendor/underscore/underscore',
+        underscore      : '../vendor/lodash/lodash',
         backbone        : '../vendor/backbone/backbone',
         bootstrap       : '../vendor/bootstrap/dist/js/bootstrap',
         text            : '../vendor/requirejs-text/text',
