@@ -1075,6 +1075,7 @@ define([
                         cls: 'combo-styles',
                         itemWidth: 104,
                         itemHeight: 38,
+                        style: 'min-width:145px;',
 //                hint        : this.tipParagraphStyle,
                         enableKeyEvents: true,
                         additionalMenuItems: [this.listStylesAdditionalMenuItem],
@@ -1168,6 +1169,14 @@ define([
                             ]
                         });
                     }
+
+                    this.btnMore = new Common.UI.Button({
+                        id: 'tlbtn-more',
+                        cls: 'btn-toolbar x-huge icon-top dropdown-manual',
+                        caption: me.capBtnMore,
+                        iconCls: 'btn-insertchart',
+                        enableToggle: true
+                    });
 
                     this.on('render:after', _.bind(this.onToolbarAfterRender, this));
                 } else {
@@ -1321,6 +1330,7 @@ define([
                 _injectComponent('#slot-img-movefrwd', this.btnImgForward);
                 _injectComponent('#slot-img-movebkwd', this.btnImgBackward);
                 _injectComponent('#slot-img-wrapping', this.btnImgWrapping);
+                _injectComponent('#slot-btn-more', this.btnMore);
 
                 +function injectBreakButtons() {
                     var me = this;
@@ -2384,7 +2394,8 @@ define([
             textNoHighlight: 'No highlighting',
             mniImageFromStorage: 'Image from Storage',
             capBtnBlankPage: 'Blank Page',
-            tipBlankPage: 'Insert blank page'
+            tipBlankPage: 'Insert blank page',
+            capBtnMore: 'More'
         }
     })(), DE.Views.Toolbar || {}));
 });

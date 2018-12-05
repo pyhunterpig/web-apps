@@ -320,6 +320,7 @@ define([
             toolbar.mnuNoControlsColor.on('click',                      _.bind(this.onNoControlsColor, this));
             toolbar.mnuControlsColorPicker.on('select',                 _.bind(this.onSelectControlsColor, this));
             $('#id-toolbar-menu-new-control-color').on('click',         _.bind(this.onNewControlsColor, this));
+            Common.NotificationCenter.on('more:toggle', _.bind(this.onMoreToggle, this));
 
             $('#id-save-style-plus, #id-save-style-link', toolbar.$el).on('click', this.onMenuSaveStyle.bind(this));
 
@@ -1436,6 +1437,32 @@ define([
                 this.api.SetPaintFormat(state ? 1 : 0);
             Common.NotificationCenter.trigger('edit:complete', this.toolbar);
             this.modeAlwaysSetStyle = state;
+        },
+
+        onMoreToggle: function(btn, state, e) {
+            (state) ? this.onMoreShow(btn, e) : this.onMoreHide(btn, e);
+        },
+
+        onMoreHide: function(btn, e) {
+            var moreContainer = btn.panel.parent();
+            if (btn.pressed) {
+                btn.toggle(false, true);
+            }
+            if (moreContainer.is(':visible')) {
+                moreContainer.hide();
+                Common.NotificationCenter.trigger('edit:complete', this.toolbar, btn);
+            }
+        },
+
+        onMoreShow: function(btn, e) {
+            var moreContainer = btn.panel.parent();
+            var target = btn.$el,
+                showxy = target.offset(),
+                right = Common.Utils.innerWidth() - showxy.left - target.width(),
+                top = showxy.top + target.height();
+
+            moreContainer.css({right: right, left: 'auto', top : top});
+            moreContainer.show();
         },
 
         onPageSizeClick: function(menu, item, state) {
