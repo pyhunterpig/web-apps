@@ -69,7 +69,8 @@ define([
     'spreadsheeteditor/main/app/view/ParagraphSettingsAdvanced',
     'spreadsheeteditor/main/app/view/ImageSettingsAdvanced',
     'spreadsheeteditor/main/app/view/SetValueDialog',
-    'spreadsheeteditor/main/app/view/AutoFilterDialog'
+    'spreadsheeteditor/main/app/view/AutoFilterDialog',
+    'spreadsheeteditor/main/app/view/MatrixSpacingDialog'
 ], function () {
     'use strict';
 
@@ -2738,6 +2739,12 @@ define([
                         })
                     });
                     arr.push(mnu);
+                    mnu = new Common.UI.MenuItem({
+                        caption     : me.txtMatrixSpacing,
+                        equation    : true,
+                        disabled    : me._currentParaObjDisabled
+                    }).on('click', _.bind(me.onMatrixSpacing, me));
+                    arr.push(mnu);
                     break;
                 case Asc.c_oAscMathInterfaceType.EqArray:
                     mnu = new Common.UI.MenuItem({
@@ -3200,6 +3207,21 @@ define([
             this._canProtect = canProtect;
         },
 
+        onMatrixSpacing: function(item, e) {
+            var me = this;
+
+            (new SSE.Views.MatrixSpacingDialog({
+                api             : me.api,
+                handler         : function(result, value) {
+                    if (result == 'ok') {
+                        if (me.api) {
+                        }
+                    }
+                    Common.NotificationCenter.trigger('edit:complete', me);
+                }
+            })).show();
+        },
+
         guestText               : 'Guest',
         textCtrlClick           : 'Click the link to open it or click and hold the mouse button to select the cell.',
         txtHeight               : 'Height',
@@ -3345,7 +3367,8 @@ define([
         txtAll: '(All)',
         txtBlanks: '(Blanks)',
         txtColumn: 'Column',
-        txtImportWizard: 'Text Import Wizard'
+        txtImportWizard: 'Text Import Wizard',
+        txtMatrixSpacing: 'Matrix Spacing'
 
     }, SSE.Controllers.DocumentHolder || {}));
 });
