@@ -54,7 +54,8 @@ define([
     'documenteditor/main/app/view/ParagraphSettingsAdvanced',
     'documenteditor/main/app/view/TableSettingsAdvanced',
     'documenteditor/main/app/view/ControlSettingsDialog',
-    'documenteditor/main/app/view/NumberingValueDialog'
+    'documenteditor/main/app/view/NumberingValueDialog',
+    'documenteditor/main/app/view/MatrixSpacingDialog'
 ], function ($, _, Backbone, gateway) { 'use strict';
 
     DE.Views.DocumentHolder =  Backbone.View.extend(_.extend({
@@ -1151,6 +1152,12 @@ define([
                                 ]
                             })
                         });
+                        arr.push(mnu);
+                        mnu = new Common.UI.MenuItem({
+                            caption     : me.txtMatrixSpacing,
+                            equation    : true,
+                            disabled    : me._currentParaObjDisabled
+                        }).on('click', _.bind(me.onMatrixSpacing, me));
                         arr.push(mnu);
                         break;
                     case Asc.c_oAscMathInterfaceType.EqArray:
@@ -3900,6 +3907,21 @@ define([
             this._canProtect = canProtect;
         },
 
+        onMatrixSpacing: function(item, e) {
+            var me = this;
+
+            (new DE.Views.MatrixSpacingDialog({
+                api             : me.api,
+                handler         : function(result, value) {
+                    if (result == 'ok') {
+                        if (me.api) {
+                        }
+                    }
+                    Common.NotificationCenter.trigger('edit:complete', me);
+                }
+            })).show();
+        },
+
         alignmentText           : 'Alignment',
         leftText                : 'Left',
         rightText               : 'Right',
@@ -4110,7 +4132,8 @@ define([
         textCropFit: 'Fit',
         textFollow: 'Follow move',
         toDictionaryText: 'Add to Dictionary',
-        txtPrintSelection: 'Print Selection'
+        txtPrintSelection: 'Print Selection',
+        txtMatrixSpacing: 'Matrix Spacing'
 
     }, DE.Views.DocumentHolder || {}));
 });
