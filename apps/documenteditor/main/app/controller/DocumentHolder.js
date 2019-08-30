@@ -39,6 +39,15 @@
  *  Copyright (c) 2018 Ascensio System SIA. All rights reserved.
  *
  */
+var c_matrixRowSpacing = {
+    MULTIPLE: 0,
+    EXACT: 1
+};
+
+var c_matrixColumnSpacing = {
+    MULTIPLE: 0,
+    EXACT: 1
+};
 
 var c_paragraphLinerule = {
     LINERULE_LEAST: 0,
