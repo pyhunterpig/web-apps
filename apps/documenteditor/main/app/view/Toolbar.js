@@ -62,7 +62,7 @@ define([
 ], function ($, _, Backbone, template, template_view) {
     'use strict';
 
-    DE.Views.Toolbar =  Common.UI.Mixtbar.extend(_.extend((function(){
+    DE.Views.Toolbar =  Common.UI.Mixtbar.extend((function(){
 
         return {
             el: '#toolbar',
@@ -2326,5 +2326,5 @@ define([
             textRemWatermark: 'Remove Watermark',
             tipWatermark: 'Edit watermark'
         }
-    })(), DE.Views.Toolbar || {}));
+    })());
 });

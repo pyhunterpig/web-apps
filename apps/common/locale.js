@@ -56,8 +56,8 @@ Common.Locale = new(function() {
                             obj = obj[p[i]];
                         }
 
-                        if (obj) {
-                            obj[p[p.length - 1]] = l10n[prop];
+                        if (obj && obj.prototype) {
+                            obj.prototype[p[p.length - 1]] = l10n[prop];
                         }
                     }
                 }
