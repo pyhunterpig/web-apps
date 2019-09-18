@@ -941,6 +941,56 @@ define([
                     });
                     this.toolbarControls.push(this.btnPageSize);
 
+                    this.btnLineNumbers = new Common.UI.Button({
+                        id: 'tlbtn-line-numbers',
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'btn-columns',
+                        caption: me.capBtnLineNumbers,
+                        menu: new Common.UI.Menu({
+                            cls: 'ppm-toolbar',
+                            items: [
+                                {
+                                    caption: this.textNone,
+                                    checkable: true,
+                                    toggleGroup: 'menuLineNumbers',
+                                    value: 0
+                                },
+                                {
+                                    caption: this.textContinuous,
+                                    checkable: true,
+                                    toggleGroup: 'menuLineNumbers',
+                                    value: 1
+                                },
+                                {
+                                    caption: this.textRestartEachPage,
+                                    checkable: true,
+                                    toggleGroup: 'menuLineNumbers',
+                                    value: 2
+                                },
+                                {
+                                    caption: this.textRestartEachSection,
+                                    checkable: true,
+                                    toggleGroup: 'menuLineNumbers',
+                                    value: 3
+                                },
+                                {
+                                    caption: this.textSuppressForCurrentParagraph,
+                                    checkable: true,
+                                    toggleGroup: 'menuLineNumbers',
+                                    value: 4
+                                },
+                                {caption: '--'},
+                                {
+                                    caption: this.textCustomLineNumbers,
+                                    value: 5,
+                                    checkable: true,
+                                    toggleGroup: 'menuLineNumbers'
+                                }
+                            ]
+                        })
+                    });
+
+
                     this.btnClearStyle = new Common.UI.Button({
                         id: 'id-toolbar-btn-clearstyle',
                         cls: 'btn-toolbar',
@@ -1310,6 +1360,7 @@ define([
                 _injectComponent('#slot-btn-dropcap', this.btnDropCap);
                 _injectComponent('#slot-btn-controls', this.btnContentControls);
                 _injectComponent('#slot-btn-columns', this.btnColumns);
+                _injectComponent('#slot-btn-line-numbers', this.btnLineNumbers);
                 _injectComponent('#slot-btn-editheader', this.btnEditHeader);
                 _injectComponent('#slot-btn-blankpage', this.btnBlankPage);
                 _injectComponent('#slot-btn-insshape', this.btnInsertShape);
@@ -1590,6 +1641,7 @@ define([
                 this.btnPageOrient.updateHint(this.tipPageOrient);
                 this.btnPageSize.updateHint(this.tipPageSize);
                 this.btnPageMargins.updateHint(this.tipPageMargins);
+                this.btnLineNumbers.updateHint(this.tipLineNumbers);
                 this.btnClearStyle.updateHint(this.tipClearStyle);
                 this.btnCopyStyle.updateHint(this.tipCopyStyle + Common.Utils.String.platformKey('Ctrl+Shift+C'));
                 this.btnColorSchemas.updateHint(this.tipColorSchemas);
@@ -2419,7 +2471,14 @@ define([
             capBtnWatermark: 'Watermark',
             textEditWatermark: 'Custom Watermark',
             textRemWatermark: 'Remove Watermark',
-            tipWatermark: 'Edit watermark'
+            tipWatermark: 'Edit watermark',
+            capBtnLineNumbers: 'Line Numbers',
+            textContinuous: 'Continuous',
+            textRestartEachPage: 'Restart Each Page',
+            textRestartEachSection: 'Restart Each Section',
+            textSuppressForCurrentParagraph: 'Suppress for Current Paragraph',
+            textCustomLineNumbers: 'Custom Line Numbers',
+            tipLineNumbers: 'Line Numbers'
         }
     })(), DE.Views.Toolbar || {}));
 });
