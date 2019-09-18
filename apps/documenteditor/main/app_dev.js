@@ -194,9 +194,7 @@ require([
         ,'common/main/lib/controller/Desktop'
     ], function() {
         window.compareVersions = true;
-        Common.Locale.apply(function () {
-            app.start();
-        });
+        Common.Locale.apply(app.start.bind(app));
     });
 }, function(err) {
     if (err.requireType == 'timeout' && !reqerr && window.requireTimeourError) {
