@@ -555,6 +555,14 @@ define([
                     this.paragraphControls.push(this.mnuInsertPageCount);
                     this.toolbarControls.push(this.btnEditHeader);
 
+                    this.btnPageNumber = new Common.UI.Button({
+                        id: 'id-toolbar-btn-pagenumber',
+                        cls: 'btn-toolbar x-huge icon-top',
+                        iconCls: 'btn-editheader',
+                        caption: me.capBtnPageNumber,
+                        menu: true
+                    });
+
                     this.btnBlankPage = new Common.UI.Button({
                         id: 'id-toolbar-btn-blankpage',
                         cls: 'btn-toolbar x-huge icon-top',
@@ -1306,6 +1314,7 @@ define([
                 _injectComponent('#slot-btn-controls', this.btnContentControls);
                 _injectComponent('#slot-btn-columns', this.btnColumns);
                 _injectComponent('#slot-btn-editheader', this.btnEditHeader);
+                _injectComponent('#slot-btn-pagenumber', this.btnPageNumber);
                 _injectComponent('#slot-btn-blankpage', this.btnBlankPage);
                 _injectComponent('#slot-btn-insshape', this.btnInsertShape);
                 _injectComponent('#slot-btn-insequation', this.btnInsertEquation);
@@ -1576,6 +1585,7 @@ define([
                 this.btnInsertText.updateHint(this.tipInsertText);
                 this.btnInsertTextArt.updateHint(this.tipInsertTextArt);
                 this.btnEditHeader.updateHint(this.tipEditHeader);
+                this.btnPageNumber.updateHint(this.tipPageNumber);
                 this.btnBlankPage.updateHint(this.tipBlankPage);
                 this.btnInsertShape.updateHint(this.tipInsertShape);
                 this.btnInsertEquation.updateHint(this.tipInsertEquation);
@@ -1650,6 +1660,16 @@ define([
                 );
                 this.paragraphControls.push(this.mnuPageNumCurrentPos);
                 this.paragraphControls.push(this.mnuInsertPageCount);
+
+                this.btnPageNumber.setMenu(
+                    new Common.UI.Menu({
+                        items: [
+                            {caption: this.capInsertPageNumber, value: 'insertpagenumber'},
+                            {caption: this.capInsertNumberOfPages, value: 'insertnumberofpage'}
+                        ]
+                    })
+                );
+                this.mnuPageNumber = this.btnPageNumber.menu;
 
                 this.btnInsertChart.setMenu( new Common.UI.Menu({
                     style: 'width: 435px;',
@@ -2324,7 +2344,11 @@ define([
             capBtnWatermark: 'Watermark',
             textEditWatermark: 'Custom Watermark',
             textRemWatermark: 'Remove Watermark',
-            tipWatermark: 'Edit watermark'
+            tipWatermark: 'Edit watermark',
+            capBtnPageNumber: 'Page Number',
+            tipPageNumber: 'Insert page number',
+            capInsertPageNumber: 'Insert page number',
+            capInsertNumberOfPages: 'Insert number of pages'
         }
     })(), DE.Views.Toolbar || {}));
 });

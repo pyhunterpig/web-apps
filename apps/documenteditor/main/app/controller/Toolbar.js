@@ -56,7 +56,8 @@ define([
     'documenteditor/main/app/controller/PageLayout',
     'documenteditor/main/app/view/CustomColumnsDialog',
     'documenteditor/main/app/view/ControlSettingsDialog',
-    'documenteditor/main/app/view/WatermarkSettingsDialog'
+    'documenteditor/main/app/view/WatermarkSettingsDialog',
+    'documenteditor/main/app/view/InsertPageNumberDialog'
 ], function () {
     'use strict';
 
@@ -326,6 +327,7 @@ define([
             toolbar.btnInsertEquation.on('click',                       _.bind(this.onInsertEquationClick, this));
             toolbar.mnuNoControlsColor.on('click',                      _.bind(this.onNoControlsColor, this));
             toolbar.mnuControlsColorPicker.on('select',                 _.bind(this.onSelectControlsColor, this));
+            toolbar.mnuPageNumber.on('item:click',                      _.bind(this.onPageNumberMenuClick, this));
             Common.Gateway.on('insertimage',                            _.bind(this.insertImage, this));
             Common.Gateway.on('setmailmergerecipients',                 _.bind(this.setMailMergeRecipients, this));
             $('#id-toolbar-menu-new-control-color').on('click',         _.bind(this.onNewControlsColor, this));
@@ -1392,6 +1394,23 @@ define([
                             }
 
                             Common.component.Analytics.trackEvent('ToolBar', 'Table');
+                        }
+                        Common.NotificationCenter.trigger('edit:complete', me.toolbar);
+                    }
+                })).show();
+            }
+        },
+
+        onPageNumberMenuClick: function(menu, item, e) {
+            if (item.value === 'insertpagenumber') {
+                var me = this;
+
+                (new DE.Views.InsertPageNumberDialog({
+                    handler: function(result, value) {
+                        if (result == 'ok') {
+                            if (me.api) {
+
+                            }
                         }
                         Common.NotificationCenter.trigger('edit:complete', me.toolbar);
                     }

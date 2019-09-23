@@ -84,6 +84,7 @@
                     <span class="btn-slot text x-huge" id="slot-btn-blankpage"></span>
                     <span class="btn-slot text x-huge btn-pagebreak"></span>
                     <span class="btn-slot text x-huge" id="slot-btn-editheader"></span>
+                    <span class="btn-slot text x-huge" id="slot-btn-pagenumber"></span>
                 </div>
                 <div class="separator long"></div>
                 <div class="group">
