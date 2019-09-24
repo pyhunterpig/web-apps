@@ -183,48 +183,48 @@ define([
     };
 
     var templateBtnIcon =
-            '<% if ( iconImg ) { %>' +
-                '<img src="<%= iconImg %>">' +
+            '<% if ( opts.iconImg ) { %>' +
+                '<img src="<%= opts.iconImg %>">' +
             '<% } else { %>' +
-                '<% if (/svgicon/.test(iconCls)) {' +
-                    'print(\'<svg width="26" height="26" class=\"icon\"><use href=\"#\' + /svgicon\\s(\\S+)/.exec(iconCls)[1] + \'\"></use></svg>\');' +
+                '<% if (/svgicon/.test(opts.iconCls)) {' +
+                    'print(\'<svg width="26" height="26" class=\"icon\"><use href=\"#\' + /svgicon\\s(\\S+)/.exec(opts.iconCls)[1] + \'\"></use></svg>\');' +
                 '} else ' +
-                    'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); %>' +
+                    'print(\'<i class=\"icon \' + opts.iconCls + \'\">&nbsp;</i>\'); %>' +
             '<% } %>';
 
     var templateHugeCaption =
-            '<button type="button" class="btn <%= cls %>" id="<%= id %>" > ' +
+            '<button type="button" class="btn <%= opts.cls %>" id="<%= opts.id %>" > ' +
                 '<div class="inner-box-icon">' +
                     templateBtnIcon +
                 '</div>' +
                 '<div class="inner-box-caption">' +
-                    '<span class="caption"><%= caption %></span>' +
+                    '<span class="caption"><%= opts.caption %></span>' +
                 '</div>' +
             '</button>';
 
     var templateHugeMenuCaption =
-        '<div class="btn-group icon-top" id="<%= id %>" style="<%= style %>">' +
-            '<button type="button" class="btn dropdown-toggle <%= cls %>" data-toggle="dropdown">' +
+        '<div class="btn-group icon-top" id="<%= opts.id %>" style="<%= opts.style %>">' +
+            '<button type="button" class="btn dropdown-toggle <%= opts.cls %>" data-toggle="dropdown">' +
                 '<div class="inner-box-icon">' +
                     templateBtnIcon +
                 '</div>' +
                 '<div class="inner-box-caption">' +
-                    '<span class="caption"><%= caption %></span>' +
+                    '<span class="caption"><%= opts.caption %></span>' +
                     '<i class="caret img-commonctrl"></i>' +
                 '</div>' +
             '</button>' +
         '</div>';
 
     var templateHugeSplitCaption =
-        '<div class="btn-group x-huge split icon-top" id="<%= id %>" style="<%= style %>">' +
-            '<button type="button" class="btn <%= cls %> inner-box-icon">' +
+        '<div class="btn-group x-huge split icon-top" id="<%= opts.id %>" style="<%= opts.style %>">' +
+            '<button type="button" class="btn <%= opts.cls %> inner-box-icon">' +
                 '<span class="btn-fixflex-hcenter">' +
                     templateBtnIcon +
                 '</span>' +
             '</button>' +
-            '<button type="button" class="btn <%= cls %> inner-box-caption dropdown-toggle" data-toggle="dropdown">' +
+            '<button type="button" class="btn <%= opts.cls %> inner-box-caption dropdown-toggle" data-toggle="dropdown">' +
                 '<span class="btn-fixflex-vcenter">' +
-                    '<span class="caption"><%= caption %></span>' +
+                    '<span class="caption"><%= opts.caption %></span>' +
                     '<i class="caret img-commonctrl"></i>' +
                 '</span>' +
             '</button>' +
@@ -249,43 +249,49 @@ define([
 
         template: _.template([
             '<% var applyicon = function() { %>',
-                '<% if (iconImg) { print(\'<img src=\"\' + iconImg + \'\">\'); } else { %>',
+                '<% if (opts.iconImg) { print(\'<img src=\"\' + opts.iconImg + \'\">\'); } else { %>',
                 // '<% if (iconCls != "") { print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); }} %>',
-                '<% if (iconCls != "") { ' +
-                    ' if (/svgicon/.test(iconCls)) {' +
-                        'print(\'<svg class=\"icon\"><use xlink:href=\"#\' + /svgicon\\s(\\S+)/.exec(iconCls)[1] + \'\"></use></svg>\');' +
+                '<% if (opts.iconCls != "") { ' +
+                    ' if (/svgicon/.test(opts.iconCls)) {' +
+                        'print(\'<svg class=\"icon\"><use xlink:href=\"#\' + /svgicon\\s(\\S+)/.exec(opts.iconCls)[1] + \'\"></use></svg>\');' +
                     '} else ' +
-                        'print(\'<i class=\"icon \' + iconCls + \'\">&nbsp;</i>\'); ' +
+                        'print(\'<i class=\"icon \' + opts.iconCls + \'\">&nbsp;</i>\'); ' +
                 '}} %>',
             '<% } %>',
-            '<% if ( !menu ) { %>',
-                '<button type="button" class="btn <%= cls %>" id="<%= id %>" style="<%= style %>">',
+            '<% if ( !opts.menu ) { %>',
+                '<button type="button" class="btn <%= opts.cls %>" id="<%= opts.id %>" style="<%= opts.style %>">',
                     '<% applyicon() %>',
-                    '<span class="caption"><%= caption %></span>',
+                    '<span class="caption"><%= opts.caption %></span>',
                 '</button>',
-            '<% } else if (split == false) {%>',
-                '<div class="btn-group" id="<%= id %>" style="<%= style %>">',
-                    '<button type="button" class="btn dropdown-toggle <%= cls %>" data-toggle="dropdown">',
+            '<% } else if (opts.split == false) {%>',
+                '<div class="btn-group" id="<%= opts.id %>" style="<%= opts.style %>">',
+                    '<button type="button" class="btn dropdown-toggle <%= opts.cls %>" data-toggle="dropdown">',
                         '<% applyicon() %>',
-                        '<span class="caption"><%= caption %></span>',
+                        '<span class="caption"><%= opts.caption %></span>',
                         '<span class="inner-box-caret">' +
                             '<i class="caret img-commonctrl"></i>' +
                         '</span>',
                     '</button>',
                 '</div>',
             '<% } else { %>',
-                '<div class="btn-group split" id="<%= id %>" style="<%= style %>">',
-                    '<button type="button" class="btn <%= cls %>">',
+                '<div class="btn-group split" id="<%= opts.id %>" style="<%= opts.style %>">',
+                    '<button type="button" class="btn <%= opts.cls %>">',
                         '<% applyicon() %>',
-                        '<span class="caption"><%= caption %></span>',
+                        '<span class="caption"><%= opts.caption %></span>',
                     '</button>',
-                    '<button type="button" class="btn <%= cls %> dropdown-toggle" data-toggle="dropdown">',
+                    '<button type="button" class="btn <%= opts.cls %> dropdown-toggle" data-toggle="dropdown">',
                         '<i class="caret img-commonctrl"></i>',
                         '<span class="sr-only"></span>',
                     '</button>',
                 '</div>',
             '<% } %>'
-        ].join('')),
+        ].join(''), null, {variable:'opts'}),
+
+        templates: {
+            hugesplitted : _.template(templateHugeSplitCaption, null, {variable:'opts'}),
+            hugewithmenu : _.template(templateHugeMenuCaption, null, {variable:'opts'}),
+            hugesimple : _.template(templateHugeCaption, null, {variable:'opts'})
+        },
 
         initialize : function(options) {
             Common.UI.BaseView.prototype.initialize.call(this, options);
@@ -328,12 +334,12 @@ define([
                     if ( /icon-top/.test(me.cls) && !!me.caption && /huge/.test(me.cls) ) {
                         if ( me.split === true ) {
                             !!me.cls && (me.cls = me.cls.replace(/\s?(?:x-huge|icon-top)/g, ''));
-                            this.template = _.template(templateHugeSplitCaption);
+                            this.template = this.templates.hugesplitted;
                         } else
                         if ( !!me.menu ) {
-                            this.template = _.template(templateHugeMenuCaption);
+                            this.template = this.templates.hugewithmenu;
                         } else {
-                            this.template = _.template(templateHugeCaption);
+                            this.template = this.templates.hugesimple;
                         }
                     }
 
