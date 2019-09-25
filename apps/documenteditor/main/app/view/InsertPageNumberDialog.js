@@ -44,7 +44,7 @@ define([
 
     DE.Views.InsertPageNumberDialog = Common.UI.Window.extend(_.extend({
         options: {
-            width: 338,
+            width: 330,
             header: true,
             style: 'min-width: 338px;',
             cls: 'modal-dlg',
@@ -59,16 +59,23 @@ define([
 
             this.template = [
                 '<div class="box" style="">',
-                '<div style="display: inline-block; width: 130px; height: 205px; vertical-align: top;">',
-                    '<label style="margin-left: 6px; margin-bottom: 2px;">' + this.textAlignment + '</label>',
-                    '<div id="insert-page-number-picker-position" class="menu-pageposition"></div>',
-                    '<button id="insert-page-number-cur-pos" class="btn btn-text-default" style="margin-left: 6px; margin-top: 6px; width: 117px;">' + this.textToCurrentPosition + '</button>',
-                '</div>',
-                '<div style="display: inline-block; height: 205px; vertical-align: top; float: right;">',
+                '<div style="display: inline-block; vertical-align: top; margin-bottom: 15px;">',
                     '<label>' + this.textNumberingStyle + '</label>',
-                    '<div id="insert-page-number-style-list" style="height: 150px; width: 150px; margin-top: 5px;"></div>',
-                    '<div id="insert-page-number-checkbox" style="margin-top: 12px;"></div>',
+                    '<div id="insert-page-number-style-list" style="height: 162px; width: 150px; margin-top: 6px;"></div>',
                 '</div>',
+                '<div style="display: inline-block; width: 131px; height: 184px; vertical-align: top; float: right; position: relative;">',
+                    '<label style="margin-bottom: 5px;">' + this.textAlignment + '</label>',
+                    '<div>',
+                        '<div id="page-number-button-top-left" style="display: inline-block; margin: 0 10px 10px 0;"></div>',
+                        '<div id="page-number-button-top-center" style="display: inline-block; margin: 0 10px 10px 0;"></div>',
+                        '<div id="page-number-button-top-right" style="display: inline-block;"></div>',
+                        '<div id="page-number-button-bottom-left" style="display: inline-block; margin: 0 10px 10px 0;"></div>',
+                        '<div id="page-number-button-bottom-center" style="display: inline-block; margin: 0 10px 10px 0;"></div>',
+                        '<div id="page-number-button-bottom-right" style="display: inline-block;"></div>',
+                    '</div>',
+                    '<button id="insert-page-number-cur-pos" class="btn btn-text-default" style="width: 131px;">' + this.textToCurrentPosition + '</button>',
+                '</div>',
+                '<div id="insert-page-number-checkbox" style=""></div>',
                 '</div>',
             ].join('');
 
@@ -80,62 +87,27 @@ define([
         render: function() {
             Common.UI.Window.prototype.render.call(this);
 
-            this.pageNumberPosPicker = new Common.UI.DataView({
-                el: $('#insert-page-number-picker-position'),
-                allowScrollbar: false,
-                store: new Common.UI.DataViewStore([
-                    {
-                        offsety: 132,
-                        allowSelected: false,
-                        data: {
-                            type: c_pageNumPosition.PAGE_NUM_POSITION_TOP,
-                            subtype: c_pageNumPosition.PAGE_NUM_POSITION_LEFT
-                        }
-                    },
-                    {
-                        offsety: 99,
-                        allowSelected: false,
-                        data: {
-                            type: c_pageNumPosition.PAGE_NUM_POSITION_TOP,
-                            subtype: c_pageNumPosition.PAGE_NUM_POSITION_CENTER
-                        }
-                    },
-                    {
-                        offsety: 66,
-                        allowSelected: false,
-                        data: {
-                            type: c_pageNumPosition.PAGE_NUM_POSITION_TOP,
-                            subtype: c_pageNumPosition.PAGE_NUM_POSITION_RIGHT
-                        }
-                    },
-                    {
-                        offsety: 33,
-                        allowSelected: false,
-                        data: {
-                            type: c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM,
-                            subtype: c_pageNumPosition.PAGE_NUM_POSITION_LEFT
-                        }
-                    },
-                    {
-                        offsety: 0,
-                        allowSelected: false,
-                        data: {
-                            type: c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM,
-                            subtype: c_pageNumPosition.PAGE_NUM_POSITION_CENTER
-                        }
-                    },
-                    {
-                        offsety: 165,
-                        allowSelected: false,
-                        data: {
-                            type: c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM,
-                            subtype: c_pageNumPosition.PAGE_NUM_POSITION_RIGHT
-                        }
-                    }
-                ]),
-                itemTemplate: _.template('<div id="<%= id %>" class="item-pagenumber" style="background-position: 0 -<%= offsety %>px"></div>')
-            });
-            this.pageNumberPosPicker.on('item:click', this.onPageNumberPosClick);
+            var _arrPosition = [
+                [c_pageNumPosition.PAGE_NUM_POSITION_TOP,     c_pageNumPosition.PAGE_NUM_POSITION_LEFT,      'icon-right-panel btn-colontitul-tl', 'page-number-button-top-left', this.textTopLeft],
+                [c_pageNumPosition.PAGE_NUM_POSITION_TOP,     c_pageNumPosition.PAGE_NUM_POSITION_CENTER,    'icon-right-panel btn-colontitul-tc', 'page-number-button-top-center', this.textTopCenter],
+                [c_pageNumPosition.PAGE_NUM_POSITION_TOP,     c_pageNumPosition.PAGE_NUM_POSITION_RIGHT,     'icon-right-panel btn-colontitul-tr', 'page-number-button-top-right', this.textTopRight],
+                [c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM,  c_pageNumPosition.PAGE_NUM_POSITION_LEFT,      'icon-right-panel btn-colontitul-bl', 'page-number-button-bottom-left', this.textBottomLeft],
+                [c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM,  c_pageNumPosition.PAGE_NUM_POSITION_CENTER,    'icon-right-panel btn-colontitul-bc', 'page-number-button-bottom-center', this.textBottomCenter],
+                [c_pageNumPosition.PAGE_NUM_POSITION_BOTTOM,  c_pageNumPosition.PAGE_NUM_POSITION_RIGHT,     'icon-right-panel btn-colontitul-br', 'page-number-button-bottom-right', this.textBottomRight]
+            ];
+            this._btnsPosition = [];
+            _.each(_arrPosition, function(item, index, list){
+                var _btn = new Common.UI.Button({
+                    cls: 'btn-options huge',
+                    iconCls: item[2],
+                    posWhere:item[0],
+                    posAlign:item[1],
+                    hint: item[4]
+                });
+                _btn.render( $('#'+item[3])) ;
+                _btn.on('click', _.bind(this.onPageNumberPosClick, this));
+                this._btnsPosition.push( _btn );
+            }, this);
 
             this.btnPageNumCurrentPos = new Common.UI.Button({
                 el: $('#insert-page-number-cur-pos')
@@ -198,16 +170,13 @@ define([
             return this;
         },
 
-        onPageNumberPosClick: function(picker, item, record) {
-            var type = record.get('data').type,
-                subtype = record.get('data').subtype;
-            item.$el.parent().find('.item-pagenumber.active').removeClass('active');
-            this.$el.parent().find('#insert-page-number-cur-pos').removeClass('active');
-            item.$el.find('.item-pagenumber').addClass('active');
+        onPageNumberPosClick: function(event) {
+            event.$el.parent().parent().find('.active').removeClass('active');
+            event.$el.find('button').addClass('active');
         },
 
         onPageNumCurrentPosClick: function(event) {
-            event.$el.parent().find('.item-pagenumber.active').removeClass('active');
+            event.$el.parent().find('.active').removeClass('active');
             event.$el.toggleClass('active');
         },
 
@@ -222,6 +191,12 @@ define([
         textPg1of10: 'Pg. 1 of 10',
         text1pipePage: '1 | Page',
         text1Pg: '1 pg.',
-        textStartAt2Page: 'Start at 2 page'
+        textStartAt2Page: 'Start at second page',
+        textTopLeft: 'Top Left',
+        textTopRight: 'Top Right',
+        textTopCenter: 'Top Center',
+        textBottomLeft: 'Bottom Left',
+        textBottomRight: 'Bottom Right',
+        textBottomCenter: 'Bottom Center'
     }, DE.Views.InsertPageNumberDialog || {}))
 });
