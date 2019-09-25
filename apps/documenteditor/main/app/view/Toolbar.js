@@ -1665,7 +1665,10 @@ define([
                     new Common.UI.Menu({
                         items: [
                             {caption: this.capInsertPageNumber, value: 'insertpagenumber'},
-                            {caption: this.capInsertNumberOfPages, value: 'insertnumberofpage'}
+                            this.mnuInsertNumberOfPage = new Common.UI.MenuItem({
+                                caption: this.textInsertPageCount,
+                                value: 'insertnumberofpage'
+                            })
                         ]
                     })
                 );
