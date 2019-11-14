@@ -28,29 +28,27 @@
             </div>
             <div id="cell-panel-gradient-fill" class="settings-hidden padding-small" style="width: 100%;">
                 <div style="height:80px;">
-                    <div style="display: inline-block;">
-                        <label class="input-label" style=""><%= scope.textStyle %></label>
-                        <div id="cell-combo-grad-type" style="width: 90px;"></div>
-                    </div>
-                    <div style="display: inline-block;float: right;">
+                    <div style="display: inline-block;float: left;">
                         <label class="input-label" style=""><%= scope.textDirection %></label>
                         <div id="cell-button-direction" style=""></div>
                     </div>
-                </div>
-                <div style="height: 28px;">
-                    <div style="display: inline-block;">
-                        <label class="input-label" style="width: 90px; padding-top: 3px;"><%= scope.textBorderColor + " 1" %></label>
-                    </div>
-                    <div style="display: inline-block;float: right;">
-                        <div id="cell-grad-btn-color-1" style=""></div>
-                    </div>
-                </div>
-                <div style="height: 28px;">
-                    <div style="display: inline-block;">
-                        <label class="input-label" style="width: 90px; padding-top: 3px;"><%= scope.textBorderColor + " 2" %></label>
-                    </div>
-                    <div style="display: inline-block;float: right;">
-                        <div id="cell-grad-btn-color-2" style=""></div>
+                    <div style="float: right; padding-top: 17px;">
+                        <div style="height: 28px;">
+                            <div style="display: inline-block;">
+                                <label class="input-label" style="width: 50px; padding-top: 3px;"><%= scope.textBorderColor + " 1" %></label>
+                            </div>
+                            <div style="display: inline-block;float: right;">
+                                <div id="cell-grad-btn-color-1" style=""></div>
+                            </div>
+                        </div>
+                        <div style="height: 28px;">
+                            <div style="display: inline-block;">
+                                <label class="input-label" style="width: 50px; padding-top: 3px;"><%= scope.textBorderColor + " 2" %></label>
+                            </div>
+                            <div style="display: inline-block;float: right;">
+                                <div id="cell-grad-btn-color-2" style=""></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -73,7 +73,6 @@ define([
                 DisabledControls: true,
                 DisabledFillPanels: false,
                 CellAngle: undefined,
-                GradFillType: Asc.c_oAscFillGradType.GRAD_LINEAR,
                 CellColor: 'transparent',
                 FillType: Asc.c_oAscFill.FILL_TYPE_SOLID,
                 FGColor: '000000',
@@ -85,9 +84,7 @@ define([
             this._locked = true;
             this.isEditCell = false;
             this.BorderType = 1;
-            this.GradFillType = Asc.c_oAscFillGradType.GRAD_LINEAR;
             this.GradLinearDirectionType = 0;
-            this.GradRadialDirectionIdx = 0;
             this.GradColors = [];
 
             this.fillControls = [];
@@ -188,39 +185,19 @@ define([
                 editable: false,
                 data: this._arrFillSrc
             });
-            this.cmbFillSrc.setValue(this._arrFillSrc[0].value);
+            this.cmbFillSrc.setValue(Asc.c_oAscFill.FILL_TYPE_NOFILL);
             this.fillControls.push(this.cmbFillSrc);
             this.cmbFillSrc.on('selected', _.bind(this.onFillSrcSelect, this));
 
-            this._arrGradType = [
-                {displayValue: this.textLinear, value: Asc.c_oAscFillGradType.GRAD_LINEAR},
-                {displayValue: this.textRadial, value: Asc.c_oAscFillGradType.GRAD_PATH}
-            ];
-
-            this.cmbGradType = new Common.UI.ComboBox({
-                el: $('#cell-combo-grad-type'),
-                cls: 'input-group-nr',
-                menuStyle: 'min-width: 90px;',
-                editable: false,
-                data: this._arrGradType
-            });
-            this.cmbGradType.setValue(this._arrGradType[0].value);
-            this.fillControls.push(this.cmbGradType);
-            this.cmbGradType.on('selected', _.bind(this.onGradTypeSelect, this));
-
             this._viewDataLinear = [
-                { offsetx: 0,   offsety: 0,   type:45,  subtype:-1, iconcls:'gradient-left-top' },
-                { offsetx: 50,  offsety: 0,   type:90,  subtype:4,  iconcls:'gradient-top'},
-                { offsetx: 100, offsety: 0,   type:135, subtype:5,  iconcls:'gradient-right-top'},
-                { offsetx: 0,   offsety: 50,  type:0,   subtype:6,  iconcls:'gradient-left', cls: 'item-gradient-separator', selected: true},
-                { offsetx: 100, offsety: 50,  type:180, subtype:1,  iconcls:'gradient-right'},
-                { offsetx: 0,   offsety: 100, type:315, subtype:2,  iconcls:'gradient-left-bottom'},
-                { offsetx: 50,  offsety: 100, type:270, subtype:3,  iconcls:'gradient-bottom'},
-                { offsetx: 100, offsety: 100, type:225, subtype:7,  iconcls:'gradient-right-bottom'}
-            ];
-
-            this._viewDataRadial = [
-                { offsetx: 100, offsety: 150, type:2, subtype:5, iconcls:'gradient-radial-center'}
+                { group: 'menu-cell-group-diagonal-up', offsetx: 0,   offsety: 0,   type:45,  subtype:-1, iconcls:'gradient-left-top' },
+                { group: 'menu-cell-group-horizontal', offsetx: 50,  offsety: 0,   type:90,  subtype:4,  iconcls:'gradient-top', selected: true},
+                { group: 'menu-cell-group-diagonal-up', offsetx: 100, offsety: 0,   type:135, subtype:5,  iconcls:'gradient-right-top'},
+                { group: 'menu-cell-group-vertical', offsetx: 0,   offsety: 50,  type:0,   subtype:6,  iconcls:'gradient-left'},
+                { group: 'menu-cell-group-vertical', offsetx: 100, offsety: 50,  type:180, subtype:1,  iconcls:'gradient-right'},
+                { group: 'menu-cell-group-diagonal-down', offsetx: 0,   offsety: 100, type:315, subtype:2,  iconcls:'gradient-left-bottom'},
+                { group: 'menu-cell-group-horizontal', offsetx: 50,  offsety: 100, type:270, subtype:3,  iconcls:'gradient-bottom'},
+                { group: 'menu-cell-group-diagonal-down', offsetx: 100, offsety: 100, type:225, subtype:7,  iconcls:'gradient-right-bottom'}
             ];
 
             this.btnDirection = new Common.UI.Button({
@@ -230,7 +207,7 @@ define([
                     style: 'min-width: 60px;',
                     menuAlign: 'tr-br',
                     items: [
-                        { template: _.template('<div id="id-cell-menu-direction" style="width: 175px; margin: 0 5px;"></div>') }
+                        { template: _.template('<div id="id-cell-menu-direction" class="menu-cell-direction" style="width: 175px; margin: 0 5px;"></div>') }
                     ]
                 })
             });
@@ -238,7 +215,13 @@ define([
                 me.mnuDirectionPicker = new Common.UI.DataView({
                     el: $('#id-cell-menu-direction'),
                     parentMenu: btn.menu,
-                    restoreHeight: 174,
+                    restoreHeight: 421,
+                    groups: new Common.UI.DataViewGroupStore([
+                        { id: 'menu-cell-group-horizontal',     caption: me.textHorizontal },
+                        { id: 'menu-cell-group-vertical',    caption: me.textVertical },
+                        { id: 'menu-cell-group-diagonal-up',     caption: me.textDiagonalUp },
+                        { id: 'menu-cell-group-diagonal-down',    caption: me.textDiagonalDown }
+                    ]),
                     store: new Common.UI.DataViewStore(me._viewDataLinear),
                     itemTemplate: _.template('<div id="<%= id %>" class="item-gradient" style="background-position: -<%= offsetx %>px -<%= offsety %>px;"></div>')
                 });
@@ -510,31 +493,16 @@ define([
                             this.OriginalFillType = Asc.c_oAscFill.FILL_TYPE_PATT;
                         }
                     } else if (this.gradient !== null) {
-                        var gradFillType = this.gradient.asc_getType();
-                        if (this._state.GradFillType !== gradFillType || this.GradFillType !== gradFillType) {
-                            this.GradFillType = gradFillType;
-                            rec = undefined;
-                            if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR || this.GradFillType == Asc.c_oAscFillGradType.GRAD_PATH) {
-                                this.cmbGradType.setValue(this.GradFillType);
-                                rec = this.cmbGradType.store.findWhere({value: this.GradFillType});
-                                this.onGradTypeSelect(this.cmbGradType, rec.attributes);
-                            } else {
-                                this.cmbGradType.setValue('');
+
+                        var value = this.gradient.asc_getDegree();
+                        if (Math.abs(this.GradLinearDirectionType - value) > 0.001) {
+                            this.GradLinearDirectionType = value;
+                            var record = this.mnuDirectionPicker.store.findWhere({type: value});
+                            this.mnuDirectionPicker.selectRecord(record, true);
+                            if (record)
+                                this.btnDirection.setIconCls('item-gradient ' + record.get('iconcls'));
+                            else
                                 this.btnDirection.setIconCls('');
-                            }
-                            this._state.GradFillType = this.GradFillType;
-                        }
-                        if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
-                            var value = this.gradient.asc_getDegree();
-                            if (Math.abs(this.GradLinearDirectionType - value) > 0.001) {
-                                this.GradLinearDirectionType = value;
-                                var record = this.mnuDirectionPicker.store.findWhere({type: value});
-                                this.mnuDirectionPicker.selectRecord(record, true);
-                                if (record)
-                                    this.btnDirection.setIconCls('item-gradient ' + record.get('iconcls'));
-                                else
-                                    this.btnDirection.setIconCls('');
-                            }
                         }
 
                         var gradientStops;
@@ -884,10 +852,8 @@ define([
                     if (!this._noApply) {
                         if (this.gradient == null)
                             this.gradient = new Asc.asc_CGradientFill();
-                        this.gradient.asc_setType(this.GradFillType);
-                        if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
-                            this.gradient.asc_setDegree(this.GradLinearDirectionType);
-                        }
+                        this.gradient.asc_setDegree(this.GradLinearDirectionType);
+
                         if (this.OriginalFillType !== Asc.c_oAscFill.FILL_TYPE_GRAD) {
                             var HexColor0 = Common.Utils.ThemeColor.getRgbColor(this.GradColors[0].Color).get_color().get_hex(),
                                 HexColor1 = Common.Utils.ThemeColor.getRgbColor(this.GradColors[1].Color).get_color().get_hex();
@@ -946,56 +912,6 @@ define([
             this.FillGradientContainer.toggleClass('settings-hidden', value !== Asc.c_oAscFill.FILL_TYPE_GRAD);
         },
 
-        onGradTypeSelect: function(combo, record) {
-            this.GradFillType = record.value;
-
-            if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
-                this.mnuDirectionPicker.store.reset(this._viewDataLinear);
-                this.mnuDirectionPicker.cmpEl.width(175);
-                this.mnuDirectionPicker.restoreHeight = 174;
-                var record = this.mnuDirectionPicker.store.findWhere({type: this.GradLinearDirectionType});
-                this.mnuDirectionPicker.selectRecord(record, true);
-                if (record)
-                    this.btnDirection.setIconCls('item-gradient ' + record.get('iconcls'));
-                else
-                    this.btnDirection.setIconCls('');
-            } else if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_PATH) {
-                this.mnuDirectionPicker.store.reset(this._viewDataRadial);
-                this.mnuDirectionPicker.cmpEl.width(60);
-                this.mnuDirectionPicker.restoreHeight = 58;
-                this.mnuDirectionPicker.selectByIndex(this.GradRadialDirectionIdx, true);
-                if (this.GradRadialDirectionIdx>=0)
-                    this.btnDirection.setIconCls('item-gradient ' + this._viewDataRadial[this.GradRadialDirectionIdx].iconcls);
-                else
-                    this.btnDirection.setIconCls('');
-            }
-
-            if (this.api && !this._noApply) {
-                if (this.gradient == null) {
-                    this.gradient = new Asc.asc_CGradientFill();
-                    if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
-                        this.gradient.asc_setDegree(this.GradLinearDirectionType);
-                    }
-                    var arrGradStop = [];
-                    this.GradColors.forEach(function (item) {
-                        var gradientStop = new Asc.asc_CGradientStop();
-                        gradientStop.asc_setColor(Common.Utils.ThemeColor.getRgbColor(item.Color));
-                        gradientStop.asc_setPosition(item.Position);
-                        arrGradStop.push(gradientStop);
-                    });
-                    this.gradient.asc_putGradientStops(arrGradStop);
-                }
-                if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
-                    this.gradient.asc_setDegree(this.GradLinearDirectionType);
-                }
-                this.gradient.asc_setType(this.GradFillType);
-                this.fill.asc_setGradientFill(this.gradient);
-                this.api.asc_setCellFill(this.fill);
-            }
-
-            Common.NotificationCenter.trigger('edit:complete', this);
-        },
-
         onSelectGradient: function(btn, picker, itemView, record) {
             var me = this;
             if (this._noApply) return;
@@ -1015,26 +931,23 @@ define([
             }
 
             this.btnDirection.setIconCls('item-gradient ' + rawData.iconcls);
-            (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) ? this.GradLinearDirectionType = rawData.type : this.GradRadialDirectionIdx = 0;
+            this.GradLinearDirectionType = rawData.type;
 
             if (this.api) {
-                if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
-                    if (this.gradient == null) {
-                        this.gradient = new Asc.asc_CGradientFill();
-                        this.gradient.asc_setType(this.GradFillType);
-                        var arrGradStop = [];
-                        this.GradColors.forEach(function (item) {
-                            var gradientStop = new Asc.asc_CGradientStop();
-                            gradientStop.asc_setColor(Common.Utils.ThemeColor.getRgbColor(item.Color));
-                            gradientStop.asc_setPosition(item.Position);
-                            arrGradStop.push(gradientStop);
-                        });
-                        this.gradient.asc_putGradientStops(arrGradStop);
-                    }
-                    this.gradient.asc_setDegree(rawData.type);
-                    this.fill.asc_setGradientFill(this.gradient);
-                    this.api.asc_setCellFill(this.fill);
+                if (this.gradient == null) {
+                    this.gradient = new Asc.asc_CGradientFill();
+                    var arrGradStop = [];
+                    this.GradColors.forEach(function (item) {
+                        var gradientStop = new Asc.asc_CGradientStop();
+                        gradientStop.asc_setColor(Common.Utils.ThemeColor.getRgbColor(item.Color));
+                        gradientStop.asc_setPosition(item.Position);
+                        arrGradStop.push(gradientStop);
+                    });
+                    this.gradient.asc_putGradientStops(arrGradStop);
                 }
+                this.gradient.asc_setDegree(rawData.type);
+                this.fill.asc_setGradientFill(this.gradient);
+                this.api.asc_setCellFill(this.fill);
             }
 
             Common.NotificationCenter.trigger('edit:complete', this);
@@ -1054,10 +967,7 @@ define([
             if (this.api && !this._noApply) {
                 if (this.gradient == null) {
                     this.gradient = new Asc.asc_CGradientFill();
-                    this.gradient.asc_setType(this.GradFillType);
-                    if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
-                        this.gradient.asc_setDegree(this.GradLinearDirectionType);
-                    }
+                    this.gradient.asc_setDegree(this.GradLinearDirectionType);
                 }
                 var arrGradStop = [];
                 this.GradColors.forEach(function (item) {
@@ -1151,7 +1061,11 @@ define([
         textRadial:         'Radial',
         textPattern:        'Pattern',
         textForeground:     'Foreground color',
-        textBackground:     'Background color'
+        textBackground:     'Background color',
+        textHorizontal:     'Horizontal',
+        textVertical:       'Vertical',
+        textDiagonalUp:     'Diagonal up',
+        textDiagonalDown:   'Diagonal down'
 
     }, SSE.Views.CellSettings || {}));
 });
