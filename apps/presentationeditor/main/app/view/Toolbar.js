@@ -1424,8 +1424,16 @@ define([
             updateAutoshapeMenu: function (menuShape, collection) {
                 var me = this;
                 var onShowAfter = function(menu) {
+                    me.arrGroups = [];
+                    me.arrStore = [];
                     for (var i = 0; i < collection.length; i++) {
-                        var shapePicker = new Common.UI.DataViewSimple({
+                        var idGroup = collection.at(i).get('id');
+                        me.arrGroups.push({id: idGroup, caption: collection.at(i).get('groupName')});
+                        var store = collection.at(i).get('groupStore');
+                        store.forEach(function (item) {
+                            me.arrStore.push({ group: idGroup, shapeType: item.get('data').shapeType, tip: item.get('tip'), selected: item.get('selected')});
+                        });
+                        /*var shapePicker = new Common.UI.DataViewSimple({
                             el: $('.shapegroup-' + i, menu.items[i].$el),
                             store: collection.at(i).get('groupStore'),
                             parentMenu: menu.items[i].menu,
@@ -1435,13 +1443,13 @@ define([
                             if (e.type !== 'click') Common.UI.Menu.Manager.hideAll();
                             if (record)
                                 me.fireEvent('insert:shape', [record.get('data').shapeType]);
-                        });
+                        });*/
                     }
                     menu.off('show:after', onShowAfter);
                 };
                 menuShape.on('show:after', onShowAfter);
 
-                for (var i = 0; i < collection.size(); i++) {
+                /*for (var i = 0; i < collection.size(); i++) {
                     var group = collection.at(i);
 
                     var menuitem = new Common.UI.MenuItem({
@@ -1454,7 +1462,22 @@ define([
                         })
                     });
                     menuShape.addItem(menuitem);
-                }
+                }*/
+
+                var picker = new Common.UI.DataView({
+                    el: $('#id-toolbar-menu-shape'),
+                    parentMenu: menuShape,
+                    showLast: false,
+                    restoreHeight: 421,
+                    groups: new Common.UI.DataViewGroupStore(me.arrGroups),
+                    store: new Common.UI.DataViewStore(me.arrStore),
+                    itemTemplate:  _.template('<div class="item-shape" id="<%= id %>"><svg width="20" height="20" class=\"icon\"><use xlink:href=\"#svg-icon-<%= shapeType %>\"></use></svg></div>')
+                });
+                picker.on('item:click', function (picker, item, record, e) {
+                    if (record)
+                        me.fireEvent('add:chart', [record.get('type')]);
+                });
+                menu.off('show:before', onShowBefore);
             },
 
             updateAddSlideMenu: function(collection) {
