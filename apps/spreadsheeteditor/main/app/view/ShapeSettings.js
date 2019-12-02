@@ -397,6 +397,9 @@ define([
         },
 
         onGradTypeSelect: function(combo, record){
+            if (this.GradFillType === Asc.c_oAscFillGradType.GRAD_PATH && record.value === Asc.c_oAscFillGradType.GRAD_LINEAR) {
+                this.GradLinearDirectionType = 0;
+            }
             this.GradFillType = record.value;
 
             if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) {
@@ -409,6 +412,8 @@ define([
                     this.btnDirection.setIconCls('item-gradient ' + record.get('iconcls'));
                 else
                     this.btnDirection.setIconCls('');
+                this.numGradientAngle.setValue(this.GradLinearDirectionType);
+                this.numGradientAngle.setDisabled(false);
             } else if (this.GradFillType == Asc.c_oAscFillGradType.GRAD_PATH) {
                 this.mnuDirectionPicker.store.reset(this._viewDataRadial);
                 this.mnuDirectionPicker.cmpEl.width(60);
@@ -418,6 +423,8 @@ define([
                     this.btnDirection.setIconCls('item-gradient ' + this._viewDataRadial[this.GradRadialDirectionIdx].iconcls);
                 else
                     this.btnDirection.setIconCls('');
+                this.numGradientAngle.setValue(0);
+                this.numGradientAngle.setDisabled(true);
             }
 
             if (this.api && !this._noApply) {
@@ -438,6 +445,22 @@ define([
             Common.NotificationCenter.trigger('edit:complete', this);
         },
 
+        onGradientAngleChange: function(field, newValue, oldValue, eOpts) {
+            if (this.api) {
+                var props = new Asc.asc_CShapeProperty();
+                var fill = new Asc.asc_CShapeFill();
+                fill.asc_putType(Asc.c_oAscFill.FILL_TYPE_GRAD);
+                fill.asc_putFill( new Asc.asc_CFillGrad());
+                fill.asc_getFill().asc_putGradType(this.GradFillType);
+                fill.asc_getFill().asc_putLinearAngle(field.getNumberValue() * 60000);
+                fill.asc_getFill().asc_putLinearScale(true);
+
+                props.asc_putFill(fill);
+                this.imgprops.asc_putShapeProperties(props);
+                this.api.asc_setGraphicObjectProps(this.imgprops);
+            }
+        },
+
         onSelectGradient: function(btn, picker, itemView, record) {
             if (this._noApply) return;
 
@@ -454,7 +477,7 @@ define([
             } else {
                 rawData = record;
             }
-
+            this.numGradientAngle.setValue(rawData.type);
             this.btnDirection.setIconCls('item-gradient ' + rawData.iconcls);
             (this.GradFillType == Asc.c_oAscFillGradType.GRAD_LINEAR) ? this.GradLinearDirectionType = rawData.type : this.GradRadialDirectionIdx = 0;
             if (this.api) {
@@ -860,6 +883,7 @@ define([
                                 this.btnDirection.setIconCls('item-gradient ' + record.get('iconcls'));
                             else
                                 this.btnDirection.setIconCls('');
+                            this.numGradientAngle.setValue(value);
                         }
                     }
 
@@ -1226,6 +1250,20 @@ define([
             this.cmbGradType.setValue(this._arrGradType[0].value);
             this.cmbGradType.on('selected', _.bind(this.onGradTypeSelect, this));
             this.fillControls.push(this.cmbGradType);
+
+            this.numGradientAngle = new Common.UI.MetricSpinner({
+                el: $('#shape-spin-gradient-angle'),
+                step: 1,
+                width: 90,
+                defaultUnit : "°",
+                value: '0 °',
+                allowDecimal: true,
+                maxValue: 359.9,
+                minValue: 0,
+                disabled: this._locked
+            });
+            this.lockedControls.push(this.numGradientAngle);
+            this.numGradientAngle.on('change', _.bind(this.onGradientAngleChange, this));
 
             this._viewDataLinear = [
                 { offsetx: 0,   offsety: 0,   type:45,  subtype:-1, iconcls:'gradient-left-top' },
@@ -1805,6 +1843,7 @@ define([
         textHint90: 'Rotate 90° Clockwise',
         textHintFlipV: 'Flip Vertically',
         textHintFlipH: 'Flip Horizontally',
-        strShadow: 'Show shadow'
+        strShadow: 'Show shadow',
+        textAngle: 'Angle'
     }, SSE.Views.ShapeSettings || {}));
 });

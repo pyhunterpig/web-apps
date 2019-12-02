@@ -55,10 +55,12 @@
                 </div>
             </div>
             <div id="shape-panel-gradient-fill" class="settings-hidden padding-small" style="width: 100%;">
-                <div style="height:80px;">
+                <div style="height:83px;">
                     <div style="display: inline-block;">
                         <label class="input-label" style=""><%= scope.textStyle %></label>
-                        <div id="shape-combo-grad-type" style="width: 90px;"></div>
+                        <div id="shape-combo-grad-type" style="width: 90px; margin-bottom: 3px;"></div>
+                        <label class="input-label" style=""><%= scope.textAngle %></label>
+                        <div id="shape-spin-gradient-angle" style="width: 90px;"></div>
                     </div>
                     <div style="display: inline-block;float: right;">
                         <label class="input-label" style=""><%= scope.textDirection %></label>
